@@ -2,7 +2,7 @@ from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _VarintBytes
 from google.protobuf.message import DecodeError
 
-import pr_pb2 as pb
+import protobuf_parser.pr_pb2 as pb
 
 
 def serialize_delimited(message: pb.WrapperMessage) -> bytes:
@@ -17,6 +17,8 @@ def parse_delimited(data: bytes) -> (pb.WrapperMessage, int):
     try:
         msg_size, pos = _DecodeVarint32(data, 0)
         msg = pb.WrapperMessage()
+        if pos + msg_size > len(data):
+            return None, 0
         msg.ParseFromString(data[pos:(pos + msg_size)])
     except (DecodeError, IndexError):
         return None, 0

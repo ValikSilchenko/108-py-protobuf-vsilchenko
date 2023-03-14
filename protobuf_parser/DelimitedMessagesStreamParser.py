@@ -1,5 +1,5 @@
-from helpers import parse_delimited
-import pr_pb2 as pb
+from protobuf_parser.helpers import parse_delimited
+import protobuf_parser.pr_pb2 as pb
 
 
 class DelimitedMessagesStreamParser:
