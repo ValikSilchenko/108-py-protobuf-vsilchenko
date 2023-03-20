@@ -7,7 +7,7 @@ class TestParser(TestCase):
     num = 2
 
     def test_full_message_sending(self):
-        parser = DelimitedMessagesStreamParser()
+        parser = DelimitedMessagesStreamParser(pb.WrapperMessage)
         msg = pb.WrapperMessage()
         data = bytes()
         for i in range(self.n):
@@ -21,7 +21,7 @@ class TestParser(TestCase):
             self.assertEqual(res[i].request_for_slow_response.time_in_seconds_to_sleep, self.num * i)
 
     def test_partial_message_sending(self):
-        parser = DelimitedMessagesStreamParser()
+        parser = DelimitedMessagesStreamParser(pb.WrapperMessage)
         msg = pb.WrapperMessage()
         data = bytes()
         for i in range(self.n):
@@ -37,3 +37,10 @@ class TestParser(TestCase):
         for i in range(self.n):
             self.assertTrue(res[i].HasField("request_for_slow_response"))
             self.assertEqual(res[i].request_for_slow_response.time_in_seconds_to_sleep, self.num * i)
+
+    def test_wrong_message_format(self):
+        parser = DelimitedMessagesStreamParser(pb.WrapperMessage)
+        data = "123456678".encode("utf-8")
+        self.assertEqual(parser.parse(data), [])
+        data = bytes()
+        self.assertEqual(parser.parse(data), [])

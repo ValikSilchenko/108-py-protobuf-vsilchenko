@@ -9,7 +9,7 @@ class TestHelpers(TestCase):
     def test_full_message_sending(self):
         message = pb.WrapperMessage()
         message.request_for_fast_response.SetInParent()
-        result_msg, bytes_consumed = parse_delimited(serialize_delimited(message))
+        result_msg, bytes_consumed = parse_delimited(serialize_delimited(message), pb.WrapperMessage)
         self.assertTrue(result_msg.HasField("request_for_fast_response"))
         self.assertEqual(bytes_consumed, _VarintSize(message.ByteSize()) + message.ByteSize())
 
@@ -17,11 +17,11 @@ class TestHelpers(TestCase):
         message = pb.WrapperMessage()
         message.request_for_fast_response.SetInParent()
         data = serialize_delimited(message)
-        result_msg, bytes_consumed = parse_delimited(data[:(len(data) // 2)])
+        result_msg, bytes_consumed = parse_delimited(data[:(len(data) // 2)], pb.WrapperMessage)
         self.assertIsNone(result_msg)
         self.assertEqual(bytes_consumed, 0)
 
-        result_msg, bytes_consumed = parse_delimited(data)
+        result_msg, bytes_consumed = parse_delimited(data, pb.WrapperMessage)
 
         self.assertTrue(result_msg.HasField("request_for_fast_response"))
         self.assertEqual(bytes_consumed, _VarintSize(message.ByteSize()) + message.ByteSize())
