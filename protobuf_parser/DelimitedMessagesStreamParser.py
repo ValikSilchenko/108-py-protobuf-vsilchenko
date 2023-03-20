@@ -6,14 +6,16 @@ class DelimitedMessagesStreamParser:
 
     def __init__(self, message_type: type):
         self._buffer = bytes()
+        if message_type is not type:
+            raise TypeError("message_type must be a type")
         self._message_type = message_type
 
     def parse(self, data: bytes) -> list:
         parsed_msgs = []
-        try:
-            self._buffer += data
-        except TypeError:
-            return []
+
+        if data is not bytes:
+            raise TypeError("data must be bytes")
+        self._buffer += data
 
         bytes_consumed = -1
         while bytes_consumed != 0:
