@@ -12,11 +12,11 @@ def serialize_delimited(message: pb.WrapperMessage) -> bytes:
     return res
 
 
-def parse_delimited(data: bytes) -> (pb.WrapperMessage, int):
+def parse_delimited(data: bytes, message_type: type) -> (..., int):
     """Parsing byte data to message, returning message and consumed bytes"""
     try:
         msg_size, pos = _DecodeVarint32(data, 0)
-        msg = pb.WrapperMessage()
+        msg = message_type()
         if pos + msg_size > len(data):
             return None, 0
         msg.ParseFromString(data[pos:(pos + msg_size)])
