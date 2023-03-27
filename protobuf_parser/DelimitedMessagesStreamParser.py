@@ -12,7 +12,7 @@ class DelimitedMessagesStreamParser:
         parsed_msgs = []
 
         if type(data) is not bytes:
-            raise TypeError("data must be bytes")
+            return []
         self._buffer += data
 
         bytes_consumed = -1
